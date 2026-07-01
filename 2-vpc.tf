@@ -1,6 +1,6 @@
-#Virtual Private Cloud (VPC) network
+# Virtual Private Cloud (VPC) network
 
-resource "google_compute_instance" "week7classroom" 
+resource "google_compute_instance" "week7classroom" {
   name         = "week7classroom"
   machine_type = "e2-medium"
   zone         = "asia-northeast1-b"
@@ -12,7 +12,8 @@ resource "google_compute_instance" "week7classroom"
   }
 
   network_interface {
-    network = "default"
+    network    = google_compute_network.week7hmwk.id
+    subnetwork = google_compute_subnetwork.tokyosound.id
 
     access_config {
       # Ephemeral public IP
@@ -27,6 +28,7 @@ resource "google_compute_instance" "week7classroom"
       type        = "ssh"
       user        = "your-ssh-user"
       private_key = file("~/.ssh/id_rsa")
-      host        = week7classroom.network_interface[0].access_config[0].nat_ip
+      host        = self.network_interface[0].access_config[0].nat_ip
     }
   }
+}
